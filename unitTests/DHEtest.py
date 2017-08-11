@@ -6,6 +6,7 @@ import DHE
 
 HOST = ("localhost", 12345)
 
+
 class DiffieHellmanTests(unittest.TestCase):
 
     def test_Alice_Bob_Same_Key(self):
@@ -37,6 +38,7 @@ class DiffieHellmanTests(unittest.TestCase):
 
         self.assertEqual(local_key, remote_key, "keys do not match")
 
+
 def negotiate_server(group=14):
     server = socket.socket()
     server.bind(HOST)
@@ -48,6 +50,7 @@ def negotiate_server(group=14):
 
     conn.send(long_to_bytes(local_key))
     conn.close()
+
 
 if __name__ == '__main__':
     unittest.main()

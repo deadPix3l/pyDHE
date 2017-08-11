@@ -99,6 +99,7 @@ from Crypto.Util.number import long_to_bytes, bytes_to_long
 
 from DHE_groups import groups
 
+
 class DHE(object):
     """ DHE object
 
@@ -152,7 +153,7 @@ class DHE(object):
 
     def negotiate(self, sock):
         sock.send(long_to_bytes(self.getPublicKey()))
-        B = sock.recv(1024) # 8192 bits
+        B = sock.recv(1024)  # 8192 bits
         return self.update(bytes_to_long(B))
 
 

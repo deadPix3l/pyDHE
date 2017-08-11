@@ -37,9 +37,9 @@
 Diffie Hellman Groups
 
 This is a supplementary file to DHE.py to simply hold the dictionary
-of RFC 3526 groups. For Diffie-Hellman to be secure, it requires the 
+of RFC 3526 groups. For Diffie-Hellman to be secure, it requires the
 parameters (p,g) to have special properties and be of a relatively large size.
-These numbers were specifically chosen by NIST or other professionals to be 
+These numbers were specifically chosen by NIST or other professionals to be
 cryptographically secure. DO NOT MODIFY.
 
 each group is a diffent bitsize, and as the group number increases, so does
