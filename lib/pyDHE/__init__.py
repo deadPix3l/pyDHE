@@ -50,7 +50,7 @@ This module does NOT handle:
     - Authentication (Currently): Diffie Hellman is susceptiblee to MITM
     attacks, and is usually coupled with RSA or DSA for signing. This signing
     will not currently be done for you in this module. I recommend using
-    pyCrypto or pyCryptodome. Good Luck. (I'm getting to it.)
+    pyCrypto or pyCryptodome.
 
     - Multiple Parties: Diffie Hellman only allows for two participants, but
     by performing several iterations of DHE, it is possible to securely
