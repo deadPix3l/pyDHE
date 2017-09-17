@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ===================================================================
 #
@@ -97,7 +98,7 @@ circumstances using the getPublicKey() and update() functions.
 from Crypto.Random.random import randint
 from Crypto.Util.number import long_to_bytes, bytes_to_long
 
-from DHE_groups import groups
+from .DHE_groups import groups
 
 
 class DHE(object):

@@ -29,6 +29,7 @@ setup(
     author='Skyler Curtis',
     author_email='skylerr.curtis@gmail.com',
 
+    install_requires = ['Crypto'],
     packages =  ["pyDHE"],
     package_dir = { "pyDHE": "lib/pyDHE"},
     platforms = 'Posix; MacOS X; Windows',
