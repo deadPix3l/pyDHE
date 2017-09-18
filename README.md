@@ -1,9 +1,15 @@
 # pyDHE
+[![PyPI version](https://badge.fury.io/py/pyDHE.svg)](https://badge.fury.io/py/pyDHE)
+
 
 pyDHE is a simple to use Diffie-Hellman implementation written in python, for
 python. It makes using Diffie-Hellman a breeze so you can focus on the real
 crypto. Eventually, I hope to include elliptic curves (ECDHE) but that is not
 currently supported.
+
+## Installation
+
+Installing is easy. pyDHE is available on PyPi. simply run: `pip install pyDHE`
 
 ## Why?
 
@@ -32,10 +38,10 @@ or other), etc.
 
 A local example of manual mode requiring no sockets is as follows:
 ```python
-    >>> import DHE
+    >>> import pyDHE
     >>>
-    >>> Alice = DHE.new()
-    >>> Bob = DHE.new()
+    >>> Alice = pyDHE.new()
+    >>> Bob = pyDHE.new()
     >>>
     >>> aliceFinal = Alice.update(Bob.getPublicKey())
     >>> bobFinal = Bob.update(Alice.getPublicKey())
@@ -52,18 +58,18 @@ other side is the remote end, and is only shown for demonstration.
 For most appications, manual isn't nessesary. We have negotiate():
 ```python
     >>> import socket
-    >>> import DHE
+    >>> import pyDHE
     >>>
     >>> sock = socket.socket()
     >>> sock.connect(('localhost', 1234))
     >>>
-    >>> alice = DHE.new(18)
+    >>> alice = pyDHE.new(18)
     >>> key = alice.negotiate(sock)
 ```
 
 This is really easy. 
 1. create a new, blocking, tcp socket and get it connected.
-2. call x = DHE.new() with the desired group.
+2. call x = pyDHE.new() with the desired group.
 3. Call x.negotiate(sock)
 4. Done! this socket may be closed, or you can use it for any other purpose.
 
@@ -108,7 +114,7 @@ spread it like the plague. Make sure everyone has easy access to DH.
 
 ## Footnotes
 
-1. You must use the same group (i.e. DHE.new(x) ) on both ends, or else you
+1. You must use the same group (i.e. pyDHE.new(x) ) on both ends, or else you
 end up with non matching keys. If omited, the default group is 14.
 
 2. negotiate() currently only supports newly created, never used, blocking,
