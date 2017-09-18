@@ -19,8 +19,10 @@ pep8 and pep257 compliant, write unit tests and release it to the world!
 
 Using pyDHE is a breeze. There are two modes: manual, and negotiate.
 In either case, the key returned will be a long. If you need a string,
-the struct library, Crypto.Util.number.long_to_bytes(), or a hashing algorithm
-will get the job done.
+the following should get the job done. Which one you use is up to you:
+- struct.pack()
+- Crypto.Util.number.long_to_bytes()
+- any hashing algorithm that accepts bigInts
 
 In manual mode you will call the update() and getPublicKey() functions.
 Transmission will be entirely your resposibility. This allows you to
