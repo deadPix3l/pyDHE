@@ -21,9 +21,6 @@ class DiffieHellmanTests(unittest.TestCase):
                              "Alice and Bob have different keys"
                              )
 
-    def test_Forgot_update_fail(self):
-        self.assertRaises(ValueError, pyDHE.new().getFinalKey)
-
     def test_negotiate(self, group=14):
 
         server = socket.socket()
@@ -56,6 +53,9 @@ class DiffieHellmanTests(unittest.TestCase):
             remote_key = bytes_to_long(sock.recv(1024))
             sock.close()
             self.assertEqual(local_key, remote_key, "keys do not match")
+
+    def test_Forgot_update_fail(self):
+        self.assertRaises(ValueError, pyDHE.new().getFinalKey)
 
     # custom parameters (aka not NIST) failures
     def test_nonNIST_str_fail(self):
