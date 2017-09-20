@@ -131,8 +131,25 @@ class DHE(object):
 
     def __init__(self, group=14, randInt=randint):
         self.group = group
-        self.g = groups[group][0]
-        self.p = groups[group][1]
+
+        # I could use nested try statements
+        # or I could use isinstance with if-elif-else
+        # I chose the latter, if you disagree, submit an issue
+        if isinstance(group, int):
+            self.g = groups[group][0]
+            self.p = groups[group][1]
+
+        elif isinstance(group, (list,tuple)):
+            self.g = group[0]
+            self.p = group[1]
+
+        elif isinstance(group, dict):
+            self.g = group['g']
+            self.p = group['p']
+
+        else:
+            raise TypeError("{} is not an int, list, tuple, or dict"
+            .format(group))
 
         self.a = randInt(1, self.p - 1)
         self.public = pow(self.g, self.a, self.p)  # g**a % p
