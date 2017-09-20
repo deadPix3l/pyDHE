@@ -1,10 +1,9 @@
 import unittest
 import socket
+import os
 from Crypto.Util.number import bytes_to_long, long_to_bytes
 
-import DHE
-
-HOST = ("localhost", 12345)
+import pyDHE
 
 
 class DiffieHellmanTests(unittest.TestCase):
@@ -12,8 +11,8 @@ class DiffieHellmanTests(unittest.TestCase):
     def test_Alice_Bob_Same_Key(self):
         for i in range(100):
             # 100 iterations should test well despite randomness?
-            alice = DHE.new()
-            bob = DHE.new()
+            alice = pyDHE.new()
+            bob = pyDHE.new()
             alice.update(bob.getPublicKey())
             bob.update(alice.getPublicKey())
 
@@ -22,35 +21,73 @@ class DiffieHellmanTests(unittest.TestCase):
                              "Alice and Bob have different keys"
                              )
 
-    def test_Forgot_update(self):
-        alice = DHE.new()
-        self.assertRaises(ValueError, alice.getFinalKey)
+    def test_Forgot_update_fail(self):
+        self.assertRaises(ValueError, pyDHE.new().getFinalKey)
 
     def test_negotiate(self, group=14):
 
-        client = socket.socket()
-        client.connect(HOST)
+        server = socket.socket()
+        server.bind(('',0))
+        server.listen(1)
+        port = server.getsockname()[1]
 
-        alice = DHE.new(group)
-        local_key = alice.negotiate(client)
-        remote_key = bytes_to_long(client.recv(1024))
-        client.close()
+        pid = os.fork()
 
-        self.assertEqual(local_key, remote_key, "keys do not match")
+        # child process - aka, the server
+        if pid == 0:
+            sock, _  = server.accept()
+            server.close()
 
+        # parent - aka, the client
+        else:
+            sock = socket.socket()
+            sock.connect(('', port))
+            server.close()
 
-def negotiate_server(group=14):
-    server = socket.socket()
-    server.bind(HOST)
-    server.listen(5)
-    conn, _ = server.accept()
+        alice = pyDHE.new(group)
+        local_key = alice.negotiate(sock)
+        #sock.close()
 
-    alice = DHE.new(group)
-    local_key = alice.negotiate(conn)
+        if pid == 0:
+            sock.send(long_to_bytes(local_key))
+            sock.close()
+        else:
+            os.wait()
+            remote_key = bytes_to_long(sock.recv(1024))
+            sock.close()
+            self.assertEqual(local_key, remote_key, "keys do not match")
 
-    conn.send(long_to_bytes(local_key))
-    conn.close()
+    # custom parameters (aka not NIST) failures
+    def test_nonNIST_str_fail(self):
+        self.assertRaises(TypeError, pyDHE.new, group='failure')
 
+    def test_nonNIST_float_fail(self):
+        self.assertRaises(TypeError, pyDHE.new, group=5.2)
+
+    def test_nonNIST_invalid_group_fail(self):
+        self.assertRaises(KeyError, pyDHE.new, group=100000)
+
+    def test_nonNIST_dict_missing_key_fail(self):
+        self.assertRaises(KeyError, pyDHE.new, group={})
+
+    def test_nonNIST_tuple_invalid_length_fail(self):
+        self.assertRaises(IndexError, pyDHE.new, group=(3,))
+
+    def test_nonNIST_tuple_with_float_fail(self):
+        self.assertRaises(TypeError, pyDHE.new, group=(2.0, 13.0))
+
+    def test_nonNIST_dict_with_str_fail(self):
+        self.assertRaises(TypeError, pyDHE.new, group={'p':'fail', 'g': 2})
+
+    def test_nonNIST_noneType_fail(self):
+        self.assertRaises(TypeError, pyDHE.new, group=None)
+
+    # Non-NIST parameters Succeeds
+    def test_nonNIST_dict(self):
+        pass
+
+    def test_nonNIST_tuple(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()
