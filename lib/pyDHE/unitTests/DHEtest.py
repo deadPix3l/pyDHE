@@ -1,6 +1,7 @@
 import unittest
 import socket
 import os
+from Crypto.Random import atfork
 from Crypto.Util.number import bytes_to_long, long_to_bytes
 
 import pyDHE
@@ -29,6 +30,7 @@ class DiffieHellmanTests(unittest.TestCase):
         port = server.getsockname()[1]
 
         pid = os.fork()
+        atfork()
 
         # child process - aka, the server
         if pid == 0:
